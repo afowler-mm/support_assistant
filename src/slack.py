@@ -5,15 +5,16 @@ from datetime import datetime
 client = slack_sdk.WebClient(token=slack_api_token)
 support_channels = ["support-general", "support-on-call"]
 
-# ticket number to search for
-ticket = "86369"
-
 # find threads containing mention of this ticket number
 def find_threads(ticket):
     threads = client.search_messages(query=ticket, sort="timestamp", sort_dir="desc", count=10)["messages"]["matches"]
     # ignore threads not in the support_channels
     threads = [thread for thread in threads if thread["channel"]["name"] in support_channels]
 
+    if len(threads) == 0:
+        return "No threads found."
+
+    thread_string = ""
     # make a readable version of all the messages in each thread
     for thread in threads:
         thread_messages = client.conversations_replies(channel=thread["channel"]["id"], ts=thread["ts"])["messages"]
@@ -32,4 +33,7 @@ def find_threads(ticket):
         
         thread["messages"] = readable_messages
 
-    return threads
+        thread_string += "\n".join(readable_messages)
+        thread_string += "\n\n"  # Add a separator between threads
+
+    return thread_string

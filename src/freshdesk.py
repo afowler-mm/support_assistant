@@ -56,4 +56,6 @@ def get_ticket_conversations(ticket_id):
         # Add the formatted conversation to the list
         formatted_conversations.append(f"{from_string} ({timestamp}): {body_text}")
 
-    return formatted_conversations
+        formatted_conversations_string = "\n".join(formatted_conversations)
+
+    return formatted_conversations_string
