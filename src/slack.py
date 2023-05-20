@@ -33,4 +33,3 @@ def find_threads(ticket):
         thread["messages"] = readable_messages
 
     return threads
-
